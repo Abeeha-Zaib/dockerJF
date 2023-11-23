@@ -1,16 +1,14 @@
 pipeline {
-    agent any
-    stages {
-        stage('Test') {
-            steps {
-                sh 'node --version'
-            }
+    agent {
+        docker {
+            image 'maven:3.9.3-eclipse-temurin-17'
+            args '-v $HOME/.m2:/root/.m2'
         }
+    }
+    stages {
         stage('Build') {
             steps {
-                sh '/usr/bin/docker pull gradle:8.2.0-jdk17-alpine'
-                sh '/usr/bin/docker inspect -f . gradle:8.2.0-jdk17-alpine'
-                // Other commands related to Docker using the full path
+                sh 'mvn -B'
             }
         }
     }
