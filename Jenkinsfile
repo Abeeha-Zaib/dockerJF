@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        docker { image 'node:20.9.0-alpine3.18' }
-    }
+    agent any
     stages {
         stage('Test') {
             steps {
@@ -9,17 +7,10 @@ pipeline {
             }
         }
         stage('Build') {
-            agent {
-                docker {
-                    image 'gradle:8.2.0-jdk17-alpine'
-                    // Run the container on the node specified at the
-                    // top-level of the Pipeline, in the same workspace,
-                    // rather than on a new node entirely:
-                    reuseNode true
-                }
-            }
             steps {
-                sh 'gradle --version'
+                sh '/usr/bin/docker pull gradle:8.2.0-jdk17-alpine'
+                sh '/usr/bin/docker inspect -f . gradle:8.2.0-jdk17-alpine'
+                // Other commands related to Docker using the full path
             }
         }
     }
